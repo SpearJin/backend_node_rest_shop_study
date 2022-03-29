@@ -1,0 +1,15 @@
+{
+  "name": "node_rest_shop",
+  "version": "1.0.0",
+  "description": "node rest",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "author": "spearjin",
+  "license": "ISC",
+  "devDependencies": {
+    "express": "^4.17.3"
+  }
+}
