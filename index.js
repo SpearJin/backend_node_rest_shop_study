@@ -2,11 +2,11 @@ const http = require('http');
 const express = require('express');
 const app = express();
 
-app.use((req, res) => {
-  res.status(200).json({
-    message: 'Hello',
-  });
-});
+const orderRoutes = require('./routes/orders');
+const productRoutes = require('./routes/products');
+
+app.use('/orders', orderRoutes);
+app.use('/products', productRoutes);
 
 const PORT = 3000;
 
