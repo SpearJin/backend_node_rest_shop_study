@@ -1,15 +1,28 @@
 const http = require('http');
 const express = require('express');
-const morgan = require('morgan');
 const app = express();
+const morgan = require('morgan');
+const bodyParser = require('body-parser');
 
 const orderRoutes = require('./routes/orders');
 const productRoutes = require('./routes/products');
+const { default: mongoose } = require('mongoose');
+
+app.use(morgan('dev'));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+
+const db =
+  'mongodb+srv://spearjin:0511@cluster0.zuka7.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';
+
+mongoose
+  .connect(db, { useNewUrlParser: false })
+  .then(() => console.log('MongoDB Connected....'))
+  .catch((error) => console.log(error));
 
 app.use('/orders', orderRoutes);
 app.use('/products', productRoutes);
 
-app.use(morgan('short'));
 app.use((req, res, next) => {
   const error = new Error('Not found');
   error.status = 404;
@@ -17,8 +30,7 @@ app.use((req, res, next) => {
 });
 
 app.use((error, req, res, next) => {
-  res.status(error.status || 500);
-  res.json({
+  res.status(error.status || 500).json({
     error: {
       msg: error.message,
     },
