@@ -9,8 +9,21 @@ router.get('/', (req, res) => {
     .find()
     .exec()
     .then((product) => {
-      console.log(product);
-      res.status(200).json(product);
+      const response = {
+        count: product.length,
+        datas: product.map((item) => {
+          return {
+            name: item.name,
+            price: item.price,
+            _id: item._id,
+            request: {
+              type: 'GET',
+              url: 'http://localhost:3000/products' + item._id,
+            },
+          };
+        }),
+      };
+      res.status(200).json(response);
     })
     .catch((error) => {
       console.log(error);
@@ -35,7 +48,15 @@ router.post('/', (req, res) => {
       console.log(result);
       res.status(200).json({
         msg: 'Product 생성 성공',
-        createdProduct: result,
+        createdProduct: {
+          name: result.name,
+          price: result.price,
+          _id: result._id,
+          request: {
+            type: 'GET',
+            url: 'http://localhost:3000/products/' + result._id,
+          },
+        },
       });
     })
     .catch((error) => {
@@ -62,7 +83,10 @@ router.put('/:productId', (req, res) => {
     .then((result) => {
       res.status(200).json({
         msg: 'Product 수정 성공',
-        updateProduct: result,
+        request: {
+          type: 'GET',
+          url: 'http://localhost:3000/products/' + id,
+        },
       });
     })
     .catch((error) => {
@@ -82,7 +106,11 @@ router.delete('/:productId', (req, res) => {
     .then((result) => {
       res.status(200).json({
         msg: 'Prodcut 삭제 성공',
-        deleteProduct: result,
+        request: {
+          type: 'GET',
+          url: 'http://localhost:3000/products',
+          body: { name: 'String', price: 'String' },
+        },
       });
     })
     .catch((error) => {
@@ -102,7 +130,10 @@ router.get('/:productId', (req, res) => {
     .then((result) => {
       res.status(200).json({
         msg: '상품 불러오기',
-        getProduct: result,
+        request: {
+          type: 'GET',
+          url: 'http://localhost:3000/products',
+        },
       });
     })
     .catch((error) => {
