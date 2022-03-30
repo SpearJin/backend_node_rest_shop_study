@@ -36,14 +36,12 @@ router.get('/', (req, res) => {
 // 데이터 생성
 router.post('/', (req, res) => {
   const { name, price } = req.body;
-  const product = new productModel({
-    _id: new mongoose.Types.ObjectId(),
-    name,
-    price,
-  });
-
-  product
-    .save()
+  productModel
+    .create({
+      _id: new mongoose.Types.ObjectId(),
+      name,
+      price,
+    })
     .then((result) => {
       console.log(result);
       res.status(200).json({
