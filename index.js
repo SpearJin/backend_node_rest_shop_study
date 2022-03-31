@@ -6,6 +6,8 @@ const bodyParser = require('body-parser');
 
 const orderRoutes = require('./routes/orders');
 const productRoutes = require('./routes/products');
+const userRoutes = require('./routes/users');
+
 const { default: mongoose } = require('mongoose');
 
 app.use(morgan('dev'));
@@ -22,6 +24,7 @@ mongoose
 
 app.use('/orders', orderRoutes);
 app.use('/products', productRoutes);
+app.use('/users', userRoutes);
 
 app.use((req, res, next) => {
   const error = new Error('Not found');
