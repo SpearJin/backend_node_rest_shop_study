@@ -7,32 +7,40 @@ const userModel = require('../models/user');
 
 // 회원가입
 router.post('/signup', (req, res) => {
-  bcrypt.hash(req.body.password, 10, (error, hash) => {
-    if (error) {
-      return err.res.status(500).json({
-        error,
+  userModel.find({ email: req.body.email }).then((user) => {
+    if (user.length >= 1) {
+      return res.status(409).json({
+        msg: '이미 존재하는 아이디 입니다',
       });
     }
-    const user = new userModel({
-      _id: new mongoose.Types.ObjectId(),
-      email: req.body.email,
-      password: hash,
-    });
 
-    user
-      .save()
-      .then((result) => {
-        res.status(200).json({
-          msg: '회원가입 성공',
-          userInfo: result,
-        });
-      })
-      .catch((error) => {
-        console.log(error);
-        res.status(500).json({
+    bcrypt.hash(req.body.password, 10, (error, hash) => {
+      if (error) {
+        return err.res.status(500).json({
           error,
         });
+      }
+      const user = new userModel({
+        _id: new mongoose.Types.ObjectId(),
+        email: req.body.email,
+        password: hash,
       });
+
+      user
+        .save()
+        .then((result) => {
+          res.status(200).json({
+            msg: '회원가입 성공',
+            userInfo: result,
+          });
+        })
+        .catch((error) => {
+          console.log(error);
+          res.status(500).json({
+            error,
+          });
+        });
+    });
   });
 });
 
