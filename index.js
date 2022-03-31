@@ -3,12 +3,11 @@ const express = require('express');
 const app = express();
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
-
-const orderRoutes = require('./routes/orders');
-const productRoutes = require('./routes/products');
-const userRoutes = require('./routes/users');
-
 const { default: mongoose } = require('mongoose');
+
+const orderRoutes = require('./api/routes/orders');
+const productRoutes = require('./api/routes/products');
+const userRoutes = require('./api/routes/users');
 
 app.use(morgan('dev'));
 app.use(bodyParser.json());

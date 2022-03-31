@@ -3,9 +3,10 @@ const router = express.Router();
 const mongoose = require('mongoose');
 const orderModel = require('../models/order');
 const productModel = require('../models/product');
+const checkAuth = require('../middleware/checkAuth');
 
 // 데이터 불러오기
-router.get('/', (req, res) => {
+router.get('/', checkAuth, (req, res) => {
   orderModel
     .find()
     .then((docs) => {
@@ -33,7 +34,7 @@ router.get('/', (req, res) => {
 });
 
 // 데이터 생성
-router.post('/', (req, res) => {
+router.post('/', checkAuth, (req, res) => {
   productModel
     .findById(req.body.productId)
     .then((product) => {
@@ -72,7 +73,7 @@ router.post('/', (req, res) => {
 });
 
 // 데이터 수정
-router.put('/:orderId', (req, res) => {
+router.put('/:orderId', checkAuth, (req, res) => {
   const id = req.params.orderId;
   const { quantity } = req.body.quantity;
   orderModel
@@ -95,7 +96,7 @@ router.put('/:orderId', (req, res) => {
 });
 
 // 데이터 삭제
-router.delete('/:orderId', (req, res) => {
+router.delete('/:orderId', checkAuth, (req, res) => {
   const id = req.params.orderId;
   orderModel
     .deleteOne({ _id: id })
@@ -117,7 +118,7 @@ router.delete('/:orderId', (req, res) => {
 });
 
 // 데이터 검색
-router.get('/:orderId', (req, res) => {
+router.get('/:orderId', checkAuth, (req, res) => {
   const id = req.params.orderId;
 
   orderModel

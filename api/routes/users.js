@@ -3,6 +3,7 @@ const router = express.Router();
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const checkAuth = require('../middleware/checkAuth');
 
 const userModel = require('../models/user');
 
@@ -77,13 +78,13 @@ router.post('/signup', (req, res) => {
 router.post('/login', (req, res) => {
   userModel
     .find({ email: req.body.email })
+    .exec()
     .then((user) => {
       if (user.length < 1) {
         return res.status(400).json({
           msg: '유저가 없습니다',
         });
       }
-      console.log(user);
       bcrypt.compare(req.body.password, user[0].password, (error, result) => {
         if (error) {
           return res.status(400).json({
@@ -101,7 +102,7 @@ router.post('/login', (req, res) => {
           );
           return res.status(200).json({
             msg: '토큰 인증 성공',
-            toekn: token,
+            token,
           });
         }
         res.status(401).json({
@@ -118,7 +119,7 @@ router.post('/login', (req, res) => {
 });
 
 // 회원탈퇴
-router.delete('/:userId', (req, res) => {
+router.delete('/:userId', checkAuth, (req, res) => {
   const id = req.params.userId;
   userModel
     .deleteOne({ _id: id })
