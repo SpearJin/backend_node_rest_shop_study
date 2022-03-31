@@ -117,4 +117,26 @@ router.post('/login', (req, res) => {
     });
 });
 
+// 회원탈퇴
+router.delete('/:userId', (req, res) => {
+  const id = req.params.userId;
+  userModel
+    .deleteOne({ _id: id })
+    .then((result) => {
+      res.status(200).json({
+        msg: '회원탈퇴',
+        request: {
+          type: 'GET',
+          url: 'http://localhost:3000/users',
+        },
+      });
+    })
+    .catch((error) => {
+      console.log(error);
+      res.status(500).json({
+        error,
+      });
+    });
+});
+
 module.exports = router;
